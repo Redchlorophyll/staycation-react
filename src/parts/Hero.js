@@ -6,6 +6,7 @@ import iconMap from "assets/images/icons/ic_map.svg";
 import iconSuitcase from "assets/images/icons/ic_suitcase.svg";
 
 import Button from "components/button";
+import numberFormat from "utils/formatNumber";
 
 export default function Hero(props) {
   function showMostPicked() {
@@ -18,7 +19,7 @@ export default function Hero(props) {
   return (
     <section className="container pt-5">
       <div className="row justify-content-center">
-        <div className="col-auto pr-5" style={{ width: 530 }}>
+        <div className="col-auto pr-5" style={{ width: 750 }}>
           <h1 className="h1 fw-bold line-height-1 mb-3">
             Forget Busy Work, <br />
             Start Next Vacation.
@@ -48,7 +49,7 @@ export default function Hero(props) {
                 alt={`${props.data.travelers} Travelers`}
               />
               <h6 className="mt-3">
-                {props.data.travelers}
+                {numberFormat(props.data.travelers)}
                 <span className="text-gray-500 font-weight-light">
                   {" "}
                   travelers
@@ -64,7 +65,7 @@ export default function Hero(props) {
                 alt={`${props.data.treasures} Treasures`}
               />
               <h6 className="mt-3">
-                {props.data.treasures}
+                {numberFormat(props.data.treasures)}
                 <span className="text-gray-500 font-weight-light">
                   {" "}
                   treasures
@@ -80,7 +81,7 @@ export default function Hero(props) {
                 alt={`${props.data.cities} Cities`}
               />
               <h6 className="mt-3">
-                {props.data.cities}
+                {numberFormat(props.data.cities)}
                 <span className="text-gray-500 font-weight-light"> cities</span>
               </h6>
             </div>
