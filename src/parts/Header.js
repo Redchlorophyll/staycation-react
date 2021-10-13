@@ -4,10 +4,6 @@ import IconText from "./IconText";
 
 export default function Header(props) {
   const getNavLinkClass = (path) => {
-    if (props.location.pathname === path) {
-      console.log("active");
-    }
-
     return props.location.pathname === path ? " active" : "";
   };
 
