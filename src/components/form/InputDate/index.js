@@ -5,7 +5,7 @@ import "./index.scss";
 export default function Number(props) {
   const { value, placeholder, name, min, max, prefix, suffix } = props;
 
-  const { inputValue, setInputValue } = useState(`${prefix}${value}${suffix}`);
+  const [InputValue, setInputValue] = useState(`${prefix}${value}${suffix}`);
 
   const onChange = (e) => {
     let value = String(e.target.value);
@@ -15,7 +15,6 @@ export default function Number(props) {
     const patternNumeric = new RegExp("[0-9]*");
     const isNumeric = patternNumeric.test(value);
 
-    //+value is just convert string to integer
     if (isNumeric && +value <= max && +value >= min) {
       props.onChange({
         target: {
@@ -36,7 +35,6 @@ export default function Number(props) {
         },
       });
   };
-
   const plus = () => {
     value < max &&
       onChange({
@@ -46,7 +44,6 @@ export default function Number(props) {
         },
       });
   };
-
   return (
     <div className={["input-number mb-3", props.outerClassName].join(" ")}>
       <div className="input-group">
@@ -62,7 +59,7 @@ export default function Number(props) {
           pattern="[0-9]*"
           className="form-control"
           placeholder={placeholder ? placeholder : "0"}
-          value={String(inputValue)}
+          value={String(InputValue)}
           onChange={onChange}
         />
         <div className="input-group-append">
@@ -78,7 +75,7 @@ export default function Number(props) {
 Number.defaultProps = {
   min: 1,
   max: 1,
-  preffix: "",
+  prefix: "",
   suffix: "",
 };
 
