@@ -1,12 +1,17 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
-import InputNumber from ".";
+// import { screen } from "@testing-library/dom";
+import InputDate from ".";
 
 class TestInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: "",
+      value: {
+        startDate: new Date(),
+        endDate: new Date(),
+        key: "selection",
+      },
     };
   }
 
@@ -16,10 +21,10 @@ class TestInput extends React.Component {
 
   render() {
     return (
-      <InputNumber
+      <InputDate
         max={30}
         onChange={this.handleChange}
-        name="value"
+        name={"value"}
         value={this.state.value}
       />
     );
@@ -28,21 +33,33 @@ class TestInput extends React.Component {
 
 const setup = () => {
   const { container } = render(<TestInput />);
-  const input = container.querySelector("input.form-control[name='value']");
+  const wrapper = container.querySelector(".input-date");
+  const input = container.querySelector("input.form-control");
 
   return {
+    container,
+    wrapper,
     input,
   };
 };
 
-test("Show able to change value", () => {
-  const { input } = setup();
-  fireEvent.change(input, { target: { value: 23 } });
-  expect(input.value).toBe("23");
+test("Should have wrapper with className .form-control", () => {
+  const { wrapper } = setup();
+
+  expect(wrapper).toBeInTheDocument();
 });
 
-test("Should not be able to change when reach max value", () => {
+test("Should have tag <input> and has className .form-control", () => {
   const { input } = setup();
-  fireEvent.change(input, { target: { value: 33 } });
-  expect(input.value).toBe("");
+
+  expect(input).toBeInTheDocument();
+});
+
+test("Should show date picker when click input field", () => {
+  const { container, input } = setup();
+
+  fireEvent.click(input, { button: 1 });
+  const datePickerWrapper = container.querySelector(".date-range-wrapper");
+
+  expect(datePickerWrapper).toBeInTheDocument();
 });

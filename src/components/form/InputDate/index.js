@@ -1,86 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import propTypes from "prop-types";
+
+import { DateRange } from "react-date-range";
+
 import "./index.scss";
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 
-export default function Number(props) {
-  const { value, placeholder, name, min, max, prefix, suffix } = props;
+import formatDate from "utils/formatDate";
+import iconCalendar from "assets/images/icons/calendar.svg";
 
-  const [InputValue, setInputValue] = useState(`${prefix}${value}${suffix}`);
+export default function InputDate(props) {
+  const { value, placeholder, name } = props;
+  const [isShowed, setIsShowed] = useState(false);
 
-  const onChange = (e) => {
-    let value = String(e.target.value);
-    if (prefix) value = value.replace(prefix);
-    if (suffix) value = value.replace(suffix);
+  const datePickerChange = (value) => {
+    const target = {
+      target: {
+        value: value.selection,
+        name: name,
+      },
+    };
+    props.onChange(target);
+  };
 
-    const patternNumeric = new RegExp("[0-9]*");
-    const isNumeric = patternNumeric.test(value);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
 
-    if (isNumeric && +value <= max && +value >= min) {
-      props.onChange({
-        target: {
-          name: name,
-          value: +value,
-        },
-      });
-      setInputValue(`${prefix}${value}${suffix}`);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  });
+
+  const refDate = useRef(null);
+  const handleClickOutside = (event) => {
+    if (refDate && !refDate.current.contains(event.target)) {
+      setIsShowed(false);
     }
   };
 
-  const minus = () => {
-    value > min &&
-      onChange({
-        target: {
-          name: name,
-          value: +value - 1,
-        },
-      });
+  const check = (focus) => {
+    focus.indexOf(1) < 0 && setIsShowed(false);
   };
-  const plus = () => {
-    value < max &&
-      onChange({
-        target: {
-          name: name,
-          value: +value + 1,
-        },
-      });
-  };
+
+  const displayDate = `${value.startDate ? formatDate(value.startDate) : ""}${
+    value.endDate ? " - " + formatDate(value.endDate) : ""
+  }`;
+
   return (
-    <div className={["input-number mb-3", props.outerClassName].join(" ")}>
+    <div
+      ref={refDate}
+      className={["input-date mb-3", props.outerClassName].join(" ")}
+    >
       <div className="input-group">
-        <div className="input-group-prepend">
-          <span className="input-group-text minus" onClick={minus}>
-            -
+        <div className="input-group-prepend bg-gray-900">
+          <span className="input-group-text">
+            <img src={iconCalendar} alt="icon calendar" />
           </span>
         </div>
         <input
-          min={min}
-          max={max}
-          name={name}
-          pattern="[0-9]*"
+          readOnly
+          type="text"
           className="form-control"
-          placeholder={placeholder ? placeholder : "0"}
-          value={String(InputValue)}
-          onChange={onChange}
+          value={displayDate}
+          placeholder={placeholder}
+          onClick={() => setIsShowed(!isShowed)}
         />
-        <div className="input-group-append">
-          <span className="input-group-text plus" onClick={plus}>
-            +
-          </span>
-        </div>
+
+        {isShowed && (
+          <div className="date-range-wrapper">
+            <DateRange
+              editableDateInputs={true}
+              onChange={datePickerChange}
+              moveRangeOnFirstSelection={false}
+              onRangeFocusChange={check}
+              ranges={[value]}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-Number.defaultProps = {
-  min: 1,
-  max: 1,
-  prefix: "",
-  suffix: "",
-};
-
-Number.propTypes = {
-  value: propTypes.oneOfType([propTypes.string, propTypes.number]),
+Date.propTypes = {
+  value: propTypes.object,
   onChange: propTypes.func,
   placeholder: propTypes.string,
   outerClassName: propTypes.string,
