@@ -64,7 +64,9 @@ export default function Number(props) {
           pattern="[0-9]*"
           className="form-control"
           placeholder={placeholder ? placeholder : "0"}
-          value={String(InputValue)}
+          value={`${prefix}${value}${suffix}${
+            isSuffixPlural && value > 1 ? "s" : ""
+          }`}
           onChange={onChange}
         />
         <div className="input-group-append">

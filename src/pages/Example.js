@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { InputDate } from "components/form";
+import Breadcrumb from "components/Breadcrumb";
 
 export default class Example extends Component {
   constructor(props) {
@@ -11,6 +12,10 @@ export default class Example extends Component {
         key: "selection",
       },
     };
+    this.breadcrumbList = [
+      { pageTitle: "Home", pageHref: "" },
+      { pageTitle: "House Details", pageHref: "" },
+    ];
   }
 
   handleChange = (e) => {
@@ -34,6 +39,8 @@ export default class Example extends Component {
             name={"value"}
             value={this.state.value}
           />
+
+          <Breadcrumb data={this.breadcrumbList} />
         </div>
       </div>
     );
